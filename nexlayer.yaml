@@ -1,0 +1,30 @@
+application:
+  name: wordpress
+  pods:
+  - name: app
+    image: mirror.gcr.io/library/wordpress:6.4-apache
+    path: /
+    servicePorts:
+    - 80
+    vars:
+      WORDPRESS_DB_HOST: wordpress-db.pod:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+    - name: wordpress-content
+      mountPath: /var/www/html/wp-content
+      size: 10Gi
+  - name: wordpress-db
+    image: mirror.gcr.io/library/mysql:8.0
+    servicePorts:
+    - 3306
+    vars:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+    - name: wordpress-db-data
+      mountPath: /var/lib/mysql
+      size: 10Gi
